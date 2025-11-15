@@ -1,0 +1,18 @@
+.footer-component {
+  background-color: #1b5e20;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  margin-top: auto;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-text {
+  margin: 0;
+  opacity: 0.9;
+}
+

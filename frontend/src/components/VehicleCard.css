@@ -1,0 +1,125 @@
+.vehicle-card {
+  background-color: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.2);
+  border-color: #2e7d32;
+}
+
+.vehicle-card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e8f5e9;
+}
+
+.vehicle-icon {
+  font-size: 3rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background-color: #e8f5e9;
+  border-radius: 12px;
+  transition: background-color 0.3s ease;
+}
+
+.vehicle-card:hover .vehicle-icon {
+  background-color: #c8e6c9;
+}
+
+.vehicle-info {
+  flex: 1;
+}
+
+.vehicle-name {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #2e7d32;
+  margin: 0 0 0.5rem 0;
+}
+
+.vehicle-type {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.vehicle-card-footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+.vehicle-card-actions {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #e8f5e9;
+}
+
+.view-details-link {
+  display: block;
+  text-align: center;
+  padding: 0.75rem 1rem;
+  background-color: transparent;
+  color: #2e7d32;
+  text-decoration: none;
+  border: 2px solid #2e7d32;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.view-details-link:hover {
+  background-color: #2e7d32;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(46, 125, 50, 0.3);
+}
+
+.status-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-active {
+  background-color: #c8e6c9;
+  color: #1b5e20;
+}
+
+.status-on-route {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.status-inactive {
+  background-color: #ffcdd2;
+  color: #b71c1c;
+}
+
+.status-default {
+  background-color: #e0e0e0;
+  color: #424242;
+}
+
