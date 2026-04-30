@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: backend
-          image: transport-backend:latest
-          imagePullPolicy: Never
+          image: antaratalapatra/transport-backend:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 5000
           env:
