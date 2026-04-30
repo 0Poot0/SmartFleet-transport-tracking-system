@@ -4,33 +4,42 @@ const cors = require("cors");
 const vehicleRoutes = require("./routes/vehicleRoutes");
 const { startSimulation, getLiveLocation } = require("./utils/simulator");
 
-const client = require('prom-client');
-client.collectDefaultMetrics();
-
+// ✅ Create app FIRST
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// 🔹 Prometheus setup
+const client = require("prom-client");
+const register = new client.Registry();
+
+client.collectDefaultMetrics({ register });
+
+// 🔹 Metrics route (ONLY ONCE)
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", register.contentType);
+  res.end(await register.metrics());
+});
+
+// 🔹 Routes
 app.use("/api", vehicleRoutes);
 
-// Direct API route for live location (alternative to controller)
 app.get("/api/live-location", (req, res) => {
-  res.json(getLiveLocation());
+  res.json({
+    pod: process.env.HOSTNAME,
+    data: getLiveLocation()
+  });
 });
 
-app.get('/metrics', async (req, res) => {
-  res.set('Content-Type', client.register.contentType);
-  res.end(await client.register.metrics());
+// Optional root route
+app.get("/", (req, res) => {
+  res.send(`Response from pod: ${process.env.HOSTNAME}`);
 });
 
-// Start vehicle simulation when server starts
+// 🔹 Start server
 app.listen(5000, () => {
-    console.log("Backend server running on http://localhost:5000");
-    console.log("Starting vehicle movement simulation...");
-    startSimulation();
-});
-
-app.get('/', (req, res) => {
-  res.send('Backend is running...');
+  console.log("Backend server running on http://localhost:5000");
+  console.log("Starting vehicle movement simulation...");
+  startSimulation();
 });

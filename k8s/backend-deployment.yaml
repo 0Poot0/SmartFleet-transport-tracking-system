@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  namespace: transport-app
 spec:
   replicas: 1
   selector:
@@ -13,23 +14,36 @@ spec:
         app: backend
     spec:
       containers:
-      - name: backend
-        image: transport-backend:latest
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 5000
+        - name: backend
+          image: transport-backend:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-config
+                  key: PORT
+
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret  
+                  key: MONGO_URI
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend-service
+  namespace: transport-app
   labels:
     app: backend
 spec:
   selector:
     app: backend
   ports:
-  - name: http
-    port: 5000
-    targetPort: 5000
+    - name: http
+      port: 5000
+      targetPort: 5000
   type: ClusterIP
