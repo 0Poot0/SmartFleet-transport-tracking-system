@@ -29,7 +29,7 @@ const Navbar = () => {
     <nav className="navbar-component">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          Transport Tracker
+          SmartFleet
         </Link>
         <div className="navbar-links">
           <Link to="/live" className="navbar-link">Live Tracking</Link>
