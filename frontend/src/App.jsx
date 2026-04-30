@@ -51,7 +51,7 @@ function AppHeader() {
 
   return (
     <header className="header">
-      <h1>Devops Project</h1>
+      <h1>SmartFleet</h1>
       <nav className="navbar">
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/live" className="nav-link">Live Location</Link>
