@@ -11,7 +11,7 @@ spec:
       rules:
         - alert: HighCPUUsage
           expr: rate(process_cpu_user_seconds_total[1m]) > 0.1
-          for: 1m
+          for: 10s
           labels:
             severity: warning
           annotations:
