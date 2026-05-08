@@ -50,39 +50,148 @@ const TicketConfirmationPage = () => {
     window.print();
   };
 
-  const handleDownloadPDF = async () => {
-    const ticketElement = ticketRef.current;
-    if (!ticketElement) return;
+  const handleDownloadPDF = () => {
+    if (!booking) return;
 
     try {
-      // Temporarily add a class to ensure styling is perfect for canvas capture
-      ticketElement.classList.add('pdf-capture-mode');
-      
-      const canvas = await html2canvas(ticketElement, {
-        scale: 2, // Higher resolution
-        useCORS: true,
-        backgroundColor: '#ffffff'
-      });
-      
-      ticketElement.classList.remove('pdf-capture-mode');
-
-      const imgData = canvas.toDataURL('image/png');
+      // Create PDF in A4 size
       const pdf = new jsPDF('p', 'mm', 'a4');
-      
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      // Center the ticket image horizontally and add some top margin
-      const marginX = 10;
-      const marginY = 20;
-      const finalWidth = pdfWidth - (marginX * 2);
-      const finalHeight = (canvas.height * finalWidth) / canvas.width;
+      const margin = 20;
+      let y = 0;
 
-      pdf.addImage(imgData, 'PNG', marginX, marginY, finalWidth, finalHeight);
-      pdf.save(`ticket-${booking.ticketID}.pdf`);
+      // --- Background / Header ---
+      pdf.setFillColor(46, 125, 50); // #2e7d32
+      pdf.rect(0, 0, 210, 50, 'F');
+      
+      pdf.setTextColor(255, 255, 255);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(28);
+      pdf.text('SmartFleet', margin, 25);
+      
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text('OFFICIAL E-TICKET', margin, 32);
+
+      // --- Ticket ID ---
+      pdf.setFontSize(10);
+      pdf.text('TICKET ID', 160, 20);
+      pdf.setFontSize(14);
+      pdf.setFont('courier', 'bold');
+      pdf.text(booking.ticketID, 160, 28);
+
+      // --- Body Section ---
+      y = 70;
+      pdf.setTextColor(100, 100, 100);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setFontSize(10);
+      pdf.text('ROUTE INFORMATION', margin, y);
+      
+      y += 10;
+      pdf.setTextColor(46, 125, 50);
+      pdf.setFontSize(16);
+      pdf.text(booking.route, margin, y);
+
+      // Journey Details
+      y += 20;
+      pdf.setTextColor(100, 100, 100);
+      pdf.setFontSize(10);
+      pdf.text('FROM', margin, y);
+      pdf.text('TO', 110, y);
+      
+      y += 8;
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(14);
+      pdf.text(booking.source, margin, y);
+      pdf.text(booking.destination, 110, y);
+
+      // Separator
+      y += 15;
+      pdf.setDrawColor(200, 200, 200);
+      pdf.line(margin, y, 190, y);
+      
+      // Passenger Section
+      y += 15;
+      pdf.setTextColor(100, 100, 100);
+      pdf.setFontSize(10);
+      pdf.text('PASSENGER DETAILS', margin, y);
+      
+      y += 10;
+      pdf.setTextColor(0, 0, 0);
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Name:`, margin, y);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(booking.passengerDetails.name, margin + 20, y);
+      
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Age:`, 110, y);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(booking.passengerDetails.age.toString(), 130, y);
+      
+      y += 10;
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Gender:`, margin, y);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(booking.passengerDetails.gender, margin + 20, y);
+      
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Phone:`, 110, y);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(booking.passengerDetails.phone, 130, y);
+
+      y += 10;
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(`Email:`, margin, y);
+      pdf.setFont('helvetica', 'normal');
+      pdf.text(booking.passengerDetails.email, margin + 20, y);
+      
+      // Separator
+      y += 15;
+      pdf.line(margin, y, 190, y);
+      
+      // Seat and Fare
+      y += 15;
+      pdf.setTextColor(100, 100, 100);
+      pdf.setFontSize(10);
+      pdf.text('SEAT NUMBERS', margin, y);
+      pdf.text('TOTAL FARE', 110, y);
+      
+      y += 10;
+      pdf.setTextColor(46, 125, 50);
+      pdf.setFontSize(14);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text(booking.seatNumbers.join(', '), margin, y);
+      
+      pdf.setFontSize(22);
+      pdf.text(`INR ${booking.fare}`, 110, y);
+
+      // Booking Timestamp
+      y += 20;
+      pdf.setTextColor(150, 150, 150);
+      pdf.setFontSize(9);
+      pdf.setFont('helvetica', 'italic');
+      pdf.text(`Booked on: ${formatDate(booking.timestamp)}`, margin, y);
+
+      // --- QR Code ---
+      const qrCanvas = document.querySelector('canvas');
+      if (qrCanvas) {
+        const qrData = qrCanvas.toDataURL('image/png');
+        pdf.addImage(qrData, 'PNG', 80, 220, 50, 50);
+        pdf.setFontSize(9);
+        pdf.setTextColor(150, 150, 150);
+        pdf.setFont('helvetica', 'normal');
+        pdf.text('Scan this code at boarding', 105, 275, { align: 'center' });
+      }
+
+      // Footer Note
+      pdf.setFontSize(8);
+      pdf.text('Thank you for choosing SmartFleet. Have a safe journey!', 105, 285, { align: 'center' });
+
+      // Save PDF
+      pdf.save(`SmartFleet-Ticket-${booking.ticketID}.pdf`);
     } catch (error) {
       console.error('Failed to generate PDF:', error);
-      alert('Failed to download PDF. Please try printing instead.');
+      alert('Failed to download PDF. Please try again.');
     }
   };
 
