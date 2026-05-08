@@ -1,7 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const vehicleRoutes = require("./routes/vehicleRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const { startSimulation, getLiveLocation } = require("./utils/simulator");
 
 // ✅ Create app FIRST
@@ -24,6 +27,7 @@ app.get("/metrics", async (req, res) => {
 
 // 🔹 Routes
 app.use("/api", vehicleRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.get("/api/live-location", (req, res) => {
   res.json({
@@ -38,8 +42,19 @@ app.get("/", (req, res) => {
 });
 
 // 🔹 Start server
-app.listen(5000, () => {
-  console.log("Backend server running on http://localhost:5000");
-  console.log("Starting vehicle movement simulation...");
-  startSimulation();
+async function start() {
+  const mongoUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/transport_tracker";
+  await mongoose.connect(mongoUri);
+  console.log("MongoDB connected");
+
+  app.listen(5000, () => {
+    console.log("Backend server running on http://localhost:5000");
+    console.log("Starting vehicle movement simulation...");
+    startSimulation();
+  });
+}
+
+start().catch((err) => {
+  console.error("Failed to start backend:", err);
+  process.exit(1);
 });

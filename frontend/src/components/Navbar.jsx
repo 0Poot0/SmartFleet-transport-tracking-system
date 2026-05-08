@@ -9,12 +9,12 @@ const Navbar = () => {
 
   useEffect(() => {
     setIsAdmin(isAdminLoggedIn());
-    
+
     // Listen for storage changes (in case of logout from another tab)
     const handleStorageChange = () => {
       setIsAdmin(isAdminLoggedIn());
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
@@ -32,16 +32,16 @@ const Navbar = () => {
           SmartFleet
         </Link>
         <div className="navbar-links">
-          <Link to="/live" className="navbar-link">Live Tracking</Link>
-          <Link to="/routes" className="navbar-link">View Routes</Link>
+          <Link to="/live" className="navbar-link">Live<br />Tracking</Link>
+          <Link to="/routes" className="navbar-link">View<br />Routes</Link>
           <Link to="/vehicles" className="navbar-link">Vehicles</Link>
           <Link to="/eta" className="navbar-link">ETA</Link>
-          <Link to="/passenger" className="navbar-link">Passenger App</Link>
+          <Link to="/dashboard" className="navbar-link">Dashboard</Link>
+          <Link to="/analytics" className="navbar-link">AdvancedAnalytics</Link>
+          <Link to="/admin" className="navbar-link">AdminPanel</Link>
+          <Link to="/passenger" className="navbar-link">Passenger<br />App</Link>
           {isAdmin && (
             <>
-              <Link to="/dashboard" className="navbar-link">Dashboard</Link>
-              <Link to="/analytics" className="navbar-link">Analytics</Link>
-              <Link to="/admin" className="navbar-link">Admin</Link>
               <button onClick={handleLogout} className="navbar-link logout-button">
                 Logout
               </button>

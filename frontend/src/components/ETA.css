@@ -1,0 +1,331 @@
+/* ETA Page Styles */
+.eta-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a3c2e 0%, #2e7d32 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.eta-container {
+  width: 100%;
+  max-width: 600px;
+}
+
+.eta-header {
+  text-align: center;
+  padding: 2.5rem 2rem 1.5rem 2rem;
+  background: white;
+}
+
+.eta-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: #1a3c2e;
+}
+
+.eta-header p {
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.eta-card {
+  background: white;
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  padding: 0;
+  animation: slideIn 0.5s ease-out;
+}
+
+.eta-input-section {
+  padding: 2rem;
+  background: white;
+  border-top: 1px solid #f0f0f0;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a3c2e;
+  margin-bottom: 0.5rem;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.distance-input {
+  width: 100%;
+  padding: 0.85rem 3.5rem 0.85rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 10px;
+  background: white;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #333;
+}
+
+.distance-input:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.distance-input:hover {
+  border-color: #bdc3c7;
+}
+
+.input-group:nth-child(n+2) {
+  margin-top: 1.5rem;
+}
+
+.speed-input {
+  width: 100%;
+  padding: 0.85rem 3.5rem 0.85rem 1rem;
+  font-size: 1rem;
+  border: 2px solid #e1e8ed;
+  border-radius: 10px;
+  background: white;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #333;
+}
+
+.speed-input:focus {
+  outline: none;
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.speed-input:hover {
+  border-color: #bdc3c7;
+}
+
+.unit {
+  position: absolute;
+  right: 1rem;
+  color: #7f8c8d;
+  font-weight: 500;
+  font-size: 0.85rem;
+  pointer-events: none;
+}
+
+.recalculate-btn {
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  background: #2e7d32;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 1rem;
+}
+
+.recalculate-btn:hover {
+  background: #1e5e1c;
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+  transform: translateY(-2px);
+}
+
+.recalculate-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+}
+
+.eta-result-section {
+  padding: 2rem;
+  background: white;
+  border-top: 1px solid #f0f0f0;
+}
+
+.eta-result-card {
+  background: linear-gradient(135deg, #1a3c2e 0%, #2e7d32 100%);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  color: white;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.2);
+  animation: fadeInScale 0.6s ease-out 0.2s both;
+}
+
+.eta-display {
+  margin: 0;
+}
+
+.eta-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.eta-value {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+  line-height: 1;
+}
+
+.loading-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+}
+
+.error-text {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.eta-details {
+  display: none;
+}
+
+.detail-item {
+  display: none;
+}
+
+.detail-label {
+  display: none;
+}
+
+.detail-value {
+  display: none;
+}
+
+.detail-separator {
+  display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .eta-page {
+    padding: 1.5rem 1rem;
+  }
+
+  .eta-card {
+    border-radius: 20px;
+  }
+
+  .eta-header {
+    padding: 2rem 1.5rem 1.25rem 1.5rem;
+  }
+
+  .eta-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .eta-header p {
+    font-size: 0.9rem;
+  }
+
+  .eta-input-section,
+  .eta-result-section {
+    padding: 1.5rem;
+  }
+
+  .distance-input,
+  .speed-input {
+    font-size: 1rem;
+    padding: 0.8rem 3rem 0.8rem 1rem;
+  }
+
+  .eta-value {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .eta-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .eta-header {
+    padding: 1.5rem 1rem 1rem 1rem;
+  }
+
+  .eta-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .eta-header p {
+    font-size: 0.85rem;
+  }
+
+  .eta-input-section,
+  .eta-result-section {
+    padding: 1.25rem;
+  }
+
+  .input-group {
+    margin-bottom: 1rem;
+  }
+
+  .distance-input,
+  .speed-input {
+    font-size: 0.95rem;
+    padding: 0.75rem 2.5rem 0.75rem 0.9rem;
+  }
+
+  .unit {
+    font-size: 0.75rem;
+  }
+
+  .recalculate-btn {
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .eta-value {
+    font-size: 2.2rem;
+  }
+
+  .eta-result-card {
+    padding: 2rem 1.5rem;
+  }
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

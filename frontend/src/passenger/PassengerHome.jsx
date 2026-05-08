@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 import './PassengerHome.css';
 
@@ -39,7 +39,7 @@ const PassengerHome = () => {
 
   return (
     <div className="passenger-home">
-      <Navbar />
+
       <main className="passenger-main">
         <div className="passenger-container">
           {/* Header Section */}

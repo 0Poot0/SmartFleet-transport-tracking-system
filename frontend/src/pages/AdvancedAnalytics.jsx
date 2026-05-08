@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 import AnimatedHeatmap from '../components/AnimatedHeatmap';
 import ClusterMap from '../components/ClusterMap';
@@ -192,7 +192,7 @@ const AdvancedAnalytics = () => {
 
   return (
     <div className="advanced-analytics-page">
-      <Navbar />
+
       <main className="analytics-main">
         <div className="analytics-container">
           <h1 className="analytics-title">Advanced Analytics</h1>

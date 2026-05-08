@@ -34,11 +34,11 @@ function AppHeader() {
 
   useEffect(() => {
     setIsAdmin(isAdminLoggedIn());
-    
+
     const handleStorageChange = () => {
       setIsAdmin(isAdminLoggedIn());
     };
-    
+
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
@@ -50,23 +50,22 @@ function AppHeader() {
   };
 
   return (
-    <header className="header">
-      <h1>SmartFleet</h1>
+    <header className="header" style={{ backgroundColor: '#2e7d32', color: 'white' }}>
+      <h1 style={{ color: 'white', margin: 0, paddingBottom: '0.5rem' }}>SmartFleet</h1>
       <nav className="navbar">
         <Link to="/" className="nav-link">Home</Link>
         <Link to="/live" className="nav-link">Live Location</Link>
         <Link to="/routes" className="nav-link">Routes</Link>
         <Link to="/vehicles" className="nav-link">Vehicles</Link>
         <Link to="/eta" className="nav-link">ETA</Link>
+        <Link to="/dashboard" className="nav-link">Dashboard</Link>
+        <Link to="/analytics" className="nav-link">Advanced Analytics</Link>
+        <Link to="/admin" className="nav-link">Admin Panel</Link>
+        <Link to="/passenger" className="nav-link">Passenger App</Link>
         {isAdmin && (
-          <>
-            <Link to="/dashboard" className="nav-link">Dashboard</Link>
-            <Link to="/analytics" className="nav-link">Analytics</Link>
-            <Link to="/admin" className="nav-link">Admin</Link>
-            <button onClick={handleLogout} className="nav-link logout-button">
-              Logout
-            </button>
-          </>
+          <button onClick={handleLogout} className="nav-link logout-button">
+            Logout
+          </button>
         )}
       </nav>
     </header>

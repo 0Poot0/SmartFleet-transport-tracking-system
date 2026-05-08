@@ -272,9 +272,11 @@
   text-align: center;
 }
 
-.qr-code-placeholder {
-  display: inline-block;
-  padding: 2rem;
+.qr-code-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem;
   background-color: white;
   border-radius: 12px;
   border: 2px solid #e8f5e9;
@@ -429,12 +431,61 @@
     padding: 1.25rem;
   }
 
-  .qr-code-placeholder {
+  .qr-code-wrapper {
     padding: 1.5rem;
   }
+}
 
-  .qr-code-icon {
-    font-size: 3rem;
+/* Print Button Styling */
+.print-btn {
+  background-color: #f39c12;
+  color: white;
+}
+
+.print-btn:hover {
+  background-color: #d68910;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(243, 156, 18, 0.3);
+}
+
+/* PDF Capture Mode Settings */
+.pdf-capture-mode {
+  border: none !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* Print Rules */
+@media print {
+  body {
+    background: white;
+  }
+  
+  .ticket-confirmation-page {
+    background: white;
+  }
+
+  /* Hide everything we don't want printed */
+  .navbar-component, 
+  .homepage-footer,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Expand ticket card for print */
+  .confirmation-container {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ticket-card {
+    border: 2px solid #2e7d32;
+    box-shadow: none;
+    margin: 0;
+    border-radius: 0;
+    page-break-inside: avoid;
   }
 }
 

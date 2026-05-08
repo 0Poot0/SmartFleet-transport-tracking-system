@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import VehicleCard from '../components/VehicleCard';
 import './VehiclesPage.css';
@@ -75,7 +74,6 @@ const VehiclesPage = () => {
 
   return (
     <div className="vehicles-page">
-      <Navbar />
       <main className="vehicles-main">
         <div className="vehicles-container">
           <h1 className="vehicles-title">Available Vehicles</h1>

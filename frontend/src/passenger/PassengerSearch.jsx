@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 import './PassengerSearch.css';
 
@@ -89,7 +89,7 @@ const PassengerSearch = () => {
 
   return (
     <div className="passenger-search">
-      <Navbar />
+
       <main className="passenger-main">
         <div className="passenger-container">
           {/* Header Section */}

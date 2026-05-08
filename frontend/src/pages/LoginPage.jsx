@@ -66,7 +66,7 @@ const LoginPage = () => {
         <div className="login-card">
           <h1 className="login-title">Admin Login</h1>
           <p className="login-subtitle">Enter your credentials to access the admin panel</p>
-          
+
           {error && (
             <div className="error-message">
               {error}
@@ -100,8 +100,8 @@ const LoginPage = () => {
               />
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className="login-button"
               disabled={loading}
             >

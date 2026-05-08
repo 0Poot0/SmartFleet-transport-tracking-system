@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
+
 import Footer from '../components/Footer';
 import { getLiveLocation } from '../services/api';
+import axios from 'axios';
 import './AdminPanel.css';
 
 const AdminPanel = () => {
@@ -38,6 +39,55 @@ const AdminPanel = () => {
   const [liveData, setLiveData] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const [counts, setCounts] = useState({ routes: null, vehicles: null });
+  const [routesLoading, setRoutesLoading] = useState(false);
+  const [routesError, setRoutesError] = useState('');
+  const [vehiclesLoading, setVehiclesLoading] = useState(false);
+  const [vehiclesError, setVehiclesError] = useState('');
+
+  const adminApi = axios.create({
+    baseURL: 'http://localhost:5000/api/admin',
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  const fetchRoutes = async () => {
+    setRoutesLoading(true);
+    setRoutesError('');
+    try {
+      const response = await axios.get('http://localhost:5000/api/routes');
+      if (response.data && Array.isArray(response.data.routes)) {
+        setRoutes(response.data.routes);
+        setCounts(prev => ({ ...prev, routes: response.data.count }));
+      }
+    } catch (error) {
+      setRoutesError('Failed to load routes.');
+      console.error(error);
+    } finally {
+      setRoutesLoading(false);
+    }
+  };
+
+  const fetchVehicles = async () => {
+    setVehiclesLoading(true);
+    setVehiclesError('');
+    try {
+      const response = await axios.get('http://localhost:5000/api/vehicles');
+      if (response.data && Array.isArray(response.data.vehicles)) {
+        setVehicles(response.data.vehicles);
+        setCounts(prev => ({ ...prev, vehicles: response.data.count }));
+      }
+    } catch (error) {
+      setVehiclesError('Failed to load vehicles.');
+      console.error(error);
+    } finally {
+      setVehiclesLoading(false);
+    }
+  };
+
+  const fetchAdminCountsAndLists = async () => {
+    await Promise.all([fetchRoutes(), fetchVehicles()]);
+  };
+
   // Fetch live location data
   const fetchLiveData = async () => {
     setLoading(true);
@@ -57,6 +107,11 @@ const AdminPanel = () => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    // Load counts + lists for dashboard cards (and keep admin tables in sync)
+    fetchAdminCountsAndLists();
+  }, []);
+
   // Route handlers
   const handleAddRoute = () => {
     setEditingRoute(null);
@@ -70,18 +125,31 @@ const AdminPanel = () => {
     setShowRouteModal(true);
   };
 
-  const handleSaveRoute = () => {
+  const handleSaveRoute = async () => {
     const stopsArray = routeForm.stops.split(',').map(s => s.trim()).filter(s => s);
-    if (editingRoute) {
-      setRoutes(routes.map(r => r.id === editingRoute.id 
-        ? { ...r, name: routeForm.name, stops: stopsArray }
-        : r
-      ));
-    } else {
-      setRoutes([...routes, { id: Date.now(), name: routeForm.name, stops: stopsArray }]);
+    try {
+      if (!editingRoute) {
+        await adminApi.post('/routes', {
+          name: routeForm.name,
+          status: 'Active',
+          stops: stopsArray,
+          description: ''
+        });
+      } else {
+        // UI has an edit flow, but the requested APIs only cover create + list.
+        // Keep existing behavior for edits (local-only) without changing UI.
+        setRoutes(routes.map(r => r.id === editingRoute.id 
+          ? { ...r, name: routeForm.name, stops: stopsArray }
+          : r
+        ));
+      }
+      await fetchAdminCountsAndLists();
+    } catch (error) {
+      console.error('Failed to save route:', error);
+    } finally {
+      setShowRouteModal(false);
+      setRouteForm({ name: '', stops: '' });
     }
-    setShowRouteModal(false);
-    setRouteForm({ name: '', stops: '' });
   };
 
   const handleDeleteRoute = (id) => {
@@ -103,17 +171,28 @@ const AdminPanel = () => {
     setShowVehicleModal(true);
   };
 
-  const handleSaveVehicle = () => {
-    if (editingVehicle) {
-      setVehicles(vehicles.map(v => v.id === editingVehicle.id 
-        ? { ...v, ...vehicleForm }
-        : v
-      ));
-    } else {
-      setVehicles([...vehicles, { id: Date.now(), ...vehicleForm }]);
+  const handleSaveVehicle = async () => {
+    try {
+      if (!editingVehicle) {
+        await adminApi.post('/vehicles', {
+          ...vehicleForm,
+          plateNumber: `TEMP-${Date.now()}`
+        });
+      } else {
+        // UI has an edit flow, but the requested APIs only cover create + list.
+        // Keep existing behavior for edits (local-only) without changing UI.
+        setVehicles(vehicles.map(v => v.id === editingVehicle.id 
+          ? { ...v, ...vehicleForm }
+          : v
+        ));
+      }
+      await fetchAdminCountsAndLists();
+    } catch (error) {
+      console.error('Failed to save vehicle:', error);
+    } finally {
+      setShowVehicleModal(false);
+      setVehicleForm({ name: '', type: 'Bus', status: 'Active' });
     }
-    setShowVehicleModal(false);
-    setVehicleForm({ name: '', type: 'Bus', status: 'Active' });
   };
 
   const handleDeleteVehicle = (id) => {
@@ -144,7 +223,7 @@ const AdminPanel = () => {
 
   return (
     <div className="admin-panel">
-      <Navbar />
+
       <div className="admin-container">
         {/* Sidebar */}
         <aside className={`admin-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
@@ -199,11 +278,11 @@ const AdminPanel = () => {
               <p>Manage your transport system from here. Select a menu item to get started.</p>
               <div className="dashboard-stats">
                 <div className="stat-card">
-                  <h3>{routes.length}</h3>
+                  <h3>{counts.routes ?? routes.length}</h3>
                   <p>Total Routes</p>
                 </div>
                 <div className="stat-card">
-                  <h3>{vehicles.length}</h3>
+                  <h3>{counts.vehicles ?? vehicles.length}</h3>
                   <p>Total Vehicles</p>
                 </div>
                 <div className="stat-card">
@@ -222,33 +301,37 @@ const AdminPanel = () => {
                   + Add Route
                 </button>
               </div>
-              <div className="table-container">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Route Name</th>
-                      <th>Stops Count</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {routes.map(route => (
-                      <tr key={route.id}>
-                        <td>{route.name}</td>
-                        <td>{route.stops.length}</td>
-                        <td>
-                          <button className="btn-edit" onClick={() => handleEditRoute(route)}>
-                            Edit
-                          </button>
-                          <button className="btn-delete" onClick={() => handleDeleteRoute(route.id)}>
-                            Delete
-                          </button>
-                        </td>
+              {routesLoading && <div className="loading-state">Loading routes...</div>}
+              {routesError && <div className="error-message">{routesError}</div>}
+              {!routesLoading && !routesError && (
+                <div className="table-container">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Route Name</th>
+                        <th>Stops Count</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {routes.map(route => (
+                        <tr key={route._id || route.id}>
+                          <td>{route.name}</td>
+                          <td>{route.stops.length}</td>
+                          <td>
+                            <button className="btn-edit" onClick={() => handleEditRoute(route)}>
+                              Edit
+                            </button>
+                            <button className="btn-delete" onClick={() => handleDeleteRoute(route._id || route.id)}>
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 
@@ -260,39 +343,43 @@ const AdminPanel = () => {
                   + Add Vehicle
                 </button>
               </div>
-              <div className="table-container">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>Vehicle Name</th>
-                      <th>Type</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {vehicles.map(vehicle => (
-                      <tr key={vehicle.id}>
-                        <td>{vehicle.name}</td>
-                        <td>{vehicle.type}</td>
-                        <td>
-                          <span className={`status-badge status-${vehicle.status.toLowerCase().replace(' ', '-')}`}>
-                            {vehicle.status}
-                          </span>
-                        </td>
-                        <td>
-                          <button className="btn-edit" onClick={() => handleEditVehicle(vehicle)}>
-                            Edit
-                          </button>
-                          <button className="btn-delete" onClick={() => handleDeleteVehicle(vehicle.id)}>
-                            Delete
-                          </button>
-                        </td>
+              {vehiclesLoading && <div className="loading-state">Loading vehicles...</div>}
+              {vehiclesError && <div className="error-message">{vehiclesError}</div>}
+              {!vehiclesLoading && !vehiclesError && (
+                <div className="table-container">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>Vehicle Name</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {vehicles.map(vehicle => (
+                        <tr key={vehicle._id || vehicle.id}>
+                          <td>{vehicle.name}</td>
+                          <td>{vehicle.type}</td>
+                          <td>
+                            <span className={`status-badge status-${vehicle.status.toLowerCase().replace(' ', '-')}`}>
+                              {vehicle.status}
+                            </span>
+                          </td>
+                          <td>
+                            <button className="btn-edit" onClick={() => handleEditVehicle(vehicle)}>
+                              Edit
+                            </button>
+                            <button className="btn-delete" onClick={() => handleDeleteVehicle(vehicle._id || vehicle.id)}>
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </div>
           )}
 

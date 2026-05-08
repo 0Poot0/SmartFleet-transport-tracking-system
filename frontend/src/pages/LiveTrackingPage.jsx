@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import LiveMap from '../components/LiveMap';
 import { getLiveLocation, getETA } from '../services/api';
@@ -80,10 +79,26 @@ const LiveTrackingPage = () => {
 
   return (
     <div className="live-tracking-page">
-      <Navbar />
       <main className="live-tracking-main">
         <div className="live-tracking-container">
-          <h1 className="live-tracking-title">Live Vehicle Tracking</h1>
+          
+          <div className="live-tracking-header">
+            <h1 className="live-tracking-title">🚌 Live Vehicle Tracking</h1>
+          </div>
+
+          <div className="live-tracking-controls">
+            <div className="vehicle-selector">
+              <label htmlFor="vehicle-select" className="vehicle-select-label">Select Vehicle:</label>
+              <select id="vehicle-select" className="vehicle-dropdown">
+                <option value="bus1">Bus 001</option>
+                <option value="bus2">Bus 002</option>
+                <option value="car1">Car 001</option>
+              </select>
+            </div>
+            <button onClick={fetchLocation} className="refresh-button">
+              🔄 Refresh
+            </button>
+          </div>
 
           {loading && !location ? (
             <div className="loading-state">Loading location data...</div>
@@ -102,27 +117,29 @@ const LiveTrackingPage = () => {
                 />
               </div>
 
-              <div className="vehicle-info-section">
-                <div className="info-card">
-                  <div className="info-item">
-                    <span className="info-label">Vehicle Status:</span>
-                    <span className="info-value status-active">Active</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Speed:</span>
-                    <span className="info-value">{speed.toFixed(1)} km/h</span>
-                  </div>
-                  <div className="info-item">
-                    <span className="info-label">Last Updated:</span>
-                    <span className="info-value">{formatTimestamp(timestamp)}</span>
-                  </div>
+              <div className="vehicle-info-grid">
+                <div className="grid-card">
+                  <div className="icon">🟢</div>
+                  <div className="label">Vehicle Status</div>
+                  <div className="value"><span className="status-active">ACTIVE</span></div>
                 </div>
 
-                <div className="eta-card">
-                  <div className="eta-label">Estimated Arrival:</div>
-                  <div className="eta-value">
-                    {etaLoading ? 'Calculating...' : formatETA(eta)}
-                  </div>
+                <div className="grid-card">
+                  <div className="icon">⚡</div>
+                  <div className="label">Speed</div>
+                  <div className="value">{speed.toFixed(1)} km/h</div>
+                </div>
+
+                <div className="grid-card">
+                  <div className="icon">🕐</div>
+                  <div className="label">Last Updated</div>
+                  <div className="value timestamp-value">{formatTimestamp(timestamp)}</div>
+                </div>
+
+                <div className="grid-card eta-card">
+                  <div className="icon">⏱️</div>
+                  <div className="label">Estimated Arrival</div>
+                  <div className="value">{etaLoading ? 'Calculating...' : formatETA(eta)}</div>
                 </div>
               </div>
             </>

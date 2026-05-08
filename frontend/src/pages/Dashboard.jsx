@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { getLiveLocation } from '../services/api';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -74,7 +73,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-page">
-      <Navbar />
       <main className="dashboard-main">
         <div className="dashboard-container">
           <h1 className="dashboard-title">Dashboard Analytics</h1>

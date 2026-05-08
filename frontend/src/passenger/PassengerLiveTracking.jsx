@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { getLiveLocation, getETA } from '../services/api';
 import { createVehicleMarker } from '../utils/leafletIcons';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import 'leaflet/dist/leaflet.css';
 import './PassengerLiveTracking.css';
@@ -121,7 +121,7 @@ const PassengerLiveTracking = () => {
   if (loading) {
     return (
       <div className="passenger-live-tracking">
-        <Navbar />
+
         <main className="passenger-main">
           <div className="loading-state">Loading live tracking...</div>
         </main>
@@ -133,7 +133,7 @@ const PassengerLiveTracking = () => {
   if (!route) {
     return (
       <div className="passenger-live-tracking">
-        <Navbar />
+
         <main className="passenger-main">
           <div className="error-state">
             <h2>Route Not Found</h2>
@@ -152,7 +152,7 @@ const PassengerLiveTracking = () => {
 
   return (
     <div className="passenger-live-tracking">
-      <Navbar />
+
       <main className="passenger-main">
         <div className="passenger-container">
           {/* Header Section */}

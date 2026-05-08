@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
 import { getETA } from '../services/api';
 import { createNumberedMarker } from '../utils/leafletIcons';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import 'leaflet/dist/leaflet.css';
 import './RouteDetailsPage.css';

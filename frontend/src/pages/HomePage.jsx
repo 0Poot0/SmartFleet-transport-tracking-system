@@ -26,28 +26,7 @@ const HomePage = () => {
 
   return (
     <div className="homepage">
-      {/* Navbar */}
-      <nav className="homepage-navbar">
-        <div className="navbar-container">
-          <Link to="/" className="navbar-logo">
-            Transport Tracker
-          </Link>
-          <div className="navbar-links">
-            <Link to="/live" className="navbar-link">Live Tracking</Link>
-            <Link to="/routes" className="navbar-link">View Routes</Link>
-            <Link to="/vehicles" className="navbar-link">Vehicles</Link>
-            <Link to="/eta" className="navbar-link">ETA</Link>
-            {isAdmin && (
-              <>
-                <Link to="/admin" className="navbar-link">Admin</Link>
-                <button onClick={handleLogout} className="navbar-link logout-button">
-                  Logout
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </nav>
+
 
       {/* Hero Section */}
       <section className="hero-section">

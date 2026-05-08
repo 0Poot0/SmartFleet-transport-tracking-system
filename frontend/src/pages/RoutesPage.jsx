@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import RouteCard from '../components/RouteCard';
 import './RoutesPage.css';
@@ -51,7 +50,6 @@ const RoutesPage = () => {
 
   return (
     <div className="routes-page">
-      <Navbar />
       <main className="routes-main">
         <div className="routes-container">
           <h1 className="routes-title">Available Routes</h1>
