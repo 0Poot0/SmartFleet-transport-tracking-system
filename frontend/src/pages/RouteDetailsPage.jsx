@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+
 import { MapContainer, TileLayer, Polyline, Marker, Popup, useMap } from 'react-leaflet';
 import { getETA } from '../services/api';
 import { createNumberedMarker } from '../utils/leafletIcons';
@@ -163,7 +163,7 @@ const RouteDetailsPage = () => {
   if (loading) {
     return (
       <div className="route-details-page">
-        <Navbar />
+
         <main className="route-details-main">
           <div className="loading-state">Loading route details...</div>
         </main>
@@ -175,7 +175,7 @@ const RouteDetailsPage = () => {
   if (!route) {
     return (
       <div className="route-details-page">
-        <Navbar />
+
         <main className="route-details-main">
           <div className="error-state">
             <h2>Route Not Found</h2>
@@ -190,7 +190,6 @@ const RouteDetailsPage = () => {
 
   return (
     <div className="route-details-page">
-      <Navbar />
       <main className="route-details-main">
         <div className="route-details-container">
           {/* Title Section */}

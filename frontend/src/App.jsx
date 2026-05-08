@@ -12,6 +12,7 @@ import VehicleDetailsPage from './pages/VehicleDetailsPage';
 import StopDetailsPage from './pages/StopDetailsPage';
 import RoutePlaybackPage from './pages/RoutePlaybackPage';
 import PassengerHome from './passenger/PassengerHome';
+import PassengerPage from './pages/PassengerPage';
 import PassengerRoutes from './passenger/PassengerRoutes';
 import PassengerRouteDetails from './passenger/PassengerRouteDetails';
 import PassengerLiveTracking from './passenger/PassengerLiveTracking';
@@ -22,61 +23,21 @@ import PaymentPage from './pages/PaymentPage';
 import PaymentSuccessPage from './pages/PaymentSuccessPage';
 import PaymentFailedPage from './pages/PaymentFailedPage';
 import LoginPage from './pages/LoginPage';
-import RequireAdmin from './components/RequireAdmin';
-import { isAdminLoggedIn, logoutAdmin } from './utils/auth';
+import ProtectedRoute from './components/ProtectedRoute';
+import UnauthorizedPage from './pages/UnauthorizedPage';
+import { isAdminLoggedIn, logoutUser } from './utils/auth';
 import LiveLocation from './components/LiveLocation';
 import ETA from './components/ETA';
+import Navbar from './components/Navbar';
 import './styles.css';
 
-function AppHeader() {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    setIsAdmin(isAdminLoggedIn());
-
-    const handleStorageChange = () => {
-      setIsAdmin(isAdminLoggedIn());
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
-
-  const handleLogout = () => {
-    logoutAdmin();
-    setIsAdmin(false);
-    navigate('/login');
-  };
-
-  return (
-    <header className="header" style={{ backgroundColor: '#2e7d32', color: 'white' }}>
-      <h1 style={{ color: 'white', margin: 0, paddingBottom: '0.5rem' }}>SmartFleet</h1>
-      <nav className="navbar">
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/live" className="nav-link">Live Location</Link>
-        <Link to="/routes" className="nav-link">Routes</Link>
-        <Link to="/vehicles" className="nav-link">Vehicles</Link>
-        <Link to="/eta" className="nav-link">ETA</Link>
-        <Link to="/dashboard" className="nav-link">Dashboard</Link>
-        <Link to="/analytics" className="nav-link">Advanced Analytics</Link>
-        <Link to="/admin" className="nav-link">Admin Panel</Link>
-        <Link to="/passenger" className="nav-link">Passenger App</Link>
-        {isAdmin && (
-          <button onClick={handleLogout} className="nav-link logout-button">
-            Logout
-          </button>
-        )}
-      </nav>
-    </header>
-  );
-}
 
 function App() {
   return (
     <Router>
       <div className="app">
-        <AppHeader />
+        <Navbar />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -87,7 +48,8 @@ function App() {
             <Route path="/vehicles" element={<VehiclesPage />} />
             <Route path="/vehicle/:id" element={<VehicleDetailsPage />} />
             <Route path="/stop/:id" element={<StopDetailsPage />} />
-            <Route path="/passenger" element={<PassengerHome />} />
+            <Route path="/passenger" element={<ProtectedRoute requiredRole="passenger"><PassengerPage /></ProtectedRoute>} />
+            <Route path="/passenger/home" element={<PassengerHome />} />
             <Route path="/passenger/routes" element={<PassengerRoutes />} />
             <Route path="/passenger/route/:id" element={<PassengerRouteDetails />} />
             <Route path="/passenger/live/:id" element={<PassengerLiveTracking />} />
@@ -99,9 +61,10 @@ function App() {
             <Route path="/payment-failed" element={<PaymentFailedPage />} />
             <Route path="/eta" element={<ETA />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/dashboard" element={<RequireAdmin><Dashboard /></RequireAdmin>} />
-            <Route path="/analytics" element={<RequireAdmin><AdvancedAnalytics /></RequireAdmin>} />
-            <Route path="/admin" element={<RequireAdmin><AdminPanel /></RequireAdmin>} />
+            <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            <Route path="/dashboard" element={<ProtectedRoute requiredRole="admin"><Dashboard /></ProtectedRoute>} />
+            <Route path="/analytics" element={<ProtectedRoute requiredRole="admin"><AdvancedAnalytics /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminPanel /></ProtectedRoute>} />
           </Routes>
         </main>
       </div>

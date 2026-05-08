@@ -28,6 +28,7 @@ app.get("/metrics", async (req, res) => {
 // 🔹 Routes
 app.use("/api", vehicleRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/auth", require("./routes/authRoutes"));
 
 app.get("/api/live-location", (req, res) => {
   res.json({

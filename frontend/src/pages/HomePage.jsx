@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { isAdminLoggedIn, logoutAdmin } from '../utils/auth';
+import { isAdminLoggedIn, logoutUser } from '../utils/auth';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -19,7 +19,7 @@ const HomePage = () => {
   }, []);
 
   const handleLogout = () => {
-    logoutAdmin();
+    logoutUser();
     setIsAdmin(false);
     navigate('/login');
   };

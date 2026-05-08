@@ -1,77 +1,90 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginAdmin } from '../utils/auth';
+import { loginUser } from '../utils/auth';
 import './LoginPage.css';
 
 const LoginPage = () => {
+  const [activeRole, setActiveRole] = useState('admin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Hardcoded admin credentials
-  const ADMIN_EMAIL = 'admin@example.com';
-  const ADMIN_PASSWORD = 'admin123';
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validatePassword = (password) => {
-    return password.length >= 6;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    // Validation
-    if (!email || !password) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    if (!validateEmail(email)) {
-      setError('Please enter a valid email address');
-      return;
-    }
-
-    if (!validatePassword(password)) {
-      setError('Password must be at least 6 characters long');
-      return;
-    }
-
     setLoading(true);
 
-    // Simulate API call delay
-    setTimeout(() => {
-      // Check credentials
-      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        // Login successful
-        loginAdmin();
-        navigate('/admin');
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        loginUser(data.role, data.token);
+        if (data.role === 'admin') {
+          navigate('/admin');
+        } else if (data.role === 'passenger') {
+          navigate('/passenger');
+        }
       } else {
-        // Login failed
-        setError('Invalid email or password');
-        setLoading(false);
+        setError(data.message || 'Login failed');
       }
-    }, 500);
+    } catch (err) {
+      setError('Connection error. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="login-page">
       <div className="login-container">
-        <div className="login-card">
-          <h1 className="login-title">Admin Login</h1>
-          <p className="login-subtitle">Enter your credentials to access the admin panel</p>
+        <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center' }}>
+          <button 
+            onClick={() => { setActiveRole('admin'); setError(''); }}
+            style={{ 
+              padding: '0.75rem 1.5rem', 
+              borderRadius: '8px', 
+              border: 'none', 
+              cursor: 'pointer',
+              backgroundColor: activeRole === 'admin' ? '#2e7d32' : '#e0e0e0',
+              color: activeRole === 'admin' ? 'white' : 'black',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Login as Admin
+          </button>
+          <button 
+            onClick={() => { setActiveRole('passenger'); setError(''); }}
+            style={{ 
+              padding: '0.75rem 1.5rem', 
+              borderRadius: '8px', 
+              border: 'none', 
+              cursor: 'pointer',
+              backgroundColor: activeRole === 'passenger' ? '#2e7d32' : '#e0e0e0',
+              color: activeRole === 'passenger' ? 'white' : 'black',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease'
+            }}
+          >
+            Login as Passenger
+          </button>
+        </div>
 
-          {error && (
-            <div className="error-message">
-              {error}
-            </div>
-          )}
+        <div className="login-card">
+          <h1 className="login-title">{activeRole === 'admin' ? 'Admin Login' : 'Passenger Login'}</h1>
+          <p className="login-subtitle">
+            {activeRole === 'admin' ? 'Enter your credentials to access the admin panel' : 'Enter your credentials to access the passenger app'}
+          </p>
+
+          {error && <div className="error-message">{error}</div>}
 
           <form onSubmit={handleSubmit} className="login-form">
             <div className="form-group">
@@ -81,8 +94,7 @@ const LoginPage = () => {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@example.com"
-                className={error && !email ? 'input-error' : ''}
+                placeholder={activeRole === 'admin' ? 'admin@example.com' : 'passenger@example.com'}
                 disabled={loading}
               />
             </div>
@@ -95,25 +107,14 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
-                className={error && !password ? 'input-error' : ''}
                 disabled={loading}
               />
             </div>
 
-            <button
-              type="submit"
-              className="login-button"
-              disabled={loading}
-            >
+            <button type="submit" className="login-button" disabled={loading}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
-
-          <div className="login-info">
-            <p className="info-text">Demo Credentials:</p>
-            <p className="credentials">Email: admin@example.com</p>
-            <p className="credentials">Password: admin123</p>
-          </div>
         </div>
       </div>
     </div>
@@ -121,4 +122,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
