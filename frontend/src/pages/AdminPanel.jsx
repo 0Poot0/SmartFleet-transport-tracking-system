@@ -46,7 +46,7 @@ const AdminPanel = () => {
   const [vehiclesError, setVehiclesError] = useState('');
 
   const adminApi = axios.create({
-    baseURL: 'http://localhost:5000/api/admin',
+    baseURL: 'https://smartfleet-transport-tracking-system.onrender.com/api/admin',
     headers: { 'Content-Type': 'application/json' }
   });
 
@@ -54,7 +54,7 @@ const AdminPanel = () => {
     setRoutesLoading(true);
     setRoutesError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/routes');
+      const response = await axios.get('https://smartfleet-transport-tracking-system.onrender.com/api/routes');
       if (response.data && Array.isArray(response.data.routes)) {
         setRoutes(response.data.routes);
         setCounts(prev => ({ ...prev, routes: response.data.count }));
@@ -71,7 +71,7 @@ const AdminPanel = () => {
     setVehiclesLoading(true);
     setVehiclesError('');
     try {
-      const response = await axios.get('http://localhost:5000/api/vehicles');
+      const response = await axios.get('https://smartfleet-transport-tracking-system.onrender.com/api/vehicles');
       if (response.data && Array.isArray(response.data.vehicles)) {
         setVehicles(response.data.vehicles);
         setCounts(prev => ({ ...prev, vehicles: response.data.count }));

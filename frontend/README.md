@@ -13,7 +13,7 @@ React frontend application for the Transport Tracking App.
 2. **Create .env file**
    Create a `.env` file in the `frontend` directory with:
    ```
-   REACT_APP_API_URL=http://localhost:5000/api
+   REACT_APP_API_URL=https://smartfleet-transport-tracking-system.onrender.com/api
    ```
 
 3. **Start the Development Server**
